@@ -49,7 +49,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     http_response_code(401);
     $message = [
         'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode GET'
+        'explication'  => 'Vous devez une méthode POST'
     ];
 
     echo json_encode($message);
