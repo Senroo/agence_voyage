@@ -1,4 +1,6 @@
 <?php
+use AgenceVoyage\Client;
+use AgenceVoyage\ClientManager;
 ////////////////// ZONE DE CONTROLE
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
@@ -30,7 +32,7 @@ if($_SERVER['REQUEST_METHOD'] == 'DELETE'){
         $message = [
             'Message' => 'Il faut rentrer un clientID'
         ];
-        json_encode($message);
+       echo json_encode($message);
     }
 }else {
     http_response_code(401);

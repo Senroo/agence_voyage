@@ -1,4 +1,6 @@
 <?php
+use AgenceVoyage\Client;
+use AgenceVoyage\ClientManager;
 ////////////////// ZONE DE CONTROLE
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');

@@ -1,5 +1,6 @@
 <?php
-
+namespace AgenceVoyage;
+use PDO;
 class ClientManager{
     private $cnx;
 

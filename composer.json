@@ -1,0 +1,18 @@
+{
+    "name": "senge/agence_voyage",
+    "description": "API pour la gestion de voyage",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "AgenceVoyage\\": "classes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Senroo",
+            "email": "sengerromain75@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

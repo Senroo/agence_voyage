@@ -1,4 +1,5 @@
 <?php
+namespace AgenceVoyage;
 class Client{
     private $clientID;
     private $prenom;

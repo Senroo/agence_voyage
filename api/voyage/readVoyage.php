@@ -1,6 +1,6 @@
 <?php
-use AgenceVoyage\Client;
-use AgenceVoyage\ClientManager;
+use AgenceVoyage\Voyage;
+use AgenceVoyage\VoyageManager;
 ////////////////// ZONE DE CONTROLE
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
@@ -10,33 +10,32 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Contro
 
 ////////////////// VERIFICATION DE LA METHODE
 if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    if(isset($_GET['clientID'])){
-        if(is_numeric($_GET['clientID'])){
+    if(isset($_GET['voyageID'])){
+        if(is_numeric($_GET['voyageID'])){
             /** On va inclure les variables CNX et les classes */
             include('../../config/cnx.php');
             /** On va inclure les variables CNX et les classes */
             
-            $clientID = $_GET['clientID'];
-            $manager = new ClientManager($cnx);
-            $client = $manager->ReadClient($clientID);
-            if($client !== null){
+            $voyageID = $_GET['voyageID'];
+            $manager = new VoyageManager($cnx);
+            $voyage = $manager->ReadTravel($voyageID);
+            if($voyage !== null){
                 $message = [
-                    'clientID' => $client->getClientID(),
-                    'Prenom'   => $client->getPrenom(),
-                    'Nom'      => $client->getNom(),
-                    'Email'    => $client->getEmail()
+                    'voyageID'         => $voyage->getVoyageID(),
+                    'Titre'            => $voyage->getTitre(),
+                    'Description'      => $voyage->getDescription()
                 ];
                 echo json_encode($message);
             } else {
                 $message = [
-                    'errorMessage' => 'Aucun client trouvé avec l\'ID = '.$clientID
+                    'errorMessage' => 'Aucun voyage trouvé avec l\'ID = '.$voyageID
                 ];
                 
                 echo json_encode($message);
             }
         } else {
             $message = [
-                'errorMessage' => 'Le clientID doit être numérique'
+                'errorMessage' => 'Le voyageID doit être numérique'
             ];
 
             echo json_encode($message);
@@ -44,7 +43,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 
     } else {
         $message = [
-            'errorMessage' => 'Vous devez rentrer un clientID'
+            'errorMessage' => 'Vous devez rentrer un voyageID'
         ];
 
         echo json_encode($message);

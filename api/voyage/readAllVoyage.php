@@ -1,6 +1,6 @@
 <?php
-use AgenceVoyage\Client;
-use AgenceVoyage\ClientManager;
+use AgenceVoyage\Voyage;
+use AgenceVoyage\VoyageManager;
 ////////////////// ZONE DE CONTROLE
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
@@ -13,17 +13,16 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
         /** On va inclure les variables CNX et les classes */
         include('../../config/cnx.php');
         /** On va inclure les variables CNX et les classes */
-        $manager = new ClientManager($cnx);
-        $datas = $manager->ReadAllClient();
-        $count = $manager->CountClient();
+        $manager = new VoyageManager($cnx);
+        $datas = $manager->ReadAllTravel();
+        $count = $manager->CountTravel();
         if($count > 0){
             $message = [];
             foreach($datas as $data){
                 $message[] = array(
-                    'clientID' => $data->getClientID(),
-                    'Prenom'   => $data->getPrenom(),
-                    'Nom'      => $data->getNom(),
-                    'Email'    => $data->getEmail()
+                    'voyageID'         => $data->getVoyageID(),
+                    'Titre'            => $data->getTitre(),
+                    'Description'      => $data->getDescription()
                 );
             }
             echo json_encode($message);
