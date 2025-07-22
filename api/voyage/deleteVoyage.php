@@ -1,5 +1,4 @@
 <?php
-use AgenceVoyage\Voyage;
 use AgenceVoyage\VoyageManager;
 ////////////////// ZONE DE CONTROLE
 header('Access-Control-Allow-Origin: *');
