@@ -1,0 +1,14 @@
+RewriteEngine on
+#Rewrite URL pour l'api client
+RewriteRule ^api/client/create$ api/client/createClient.php [L]
+RewriteRule ^api/client/create/$ api/client/createClient.php [L]
+RewriteRule ^api/client/delete$ api/client/deleteClient.php [L]
+RewriteRule ^api/client/delete/$ api/client/deleteClient.php [L]
+RewriteRule ^api/client/read/([0-9]+)$ api/client/readClient.php?clientID=$1 [L]
+RewriteRule ^api/client/read/([0-9]+)/$ api/client/readClient.php?clientID=$1 [L]
+RewriteRule ^api/client/readAll$ api/client/readAllClient.php [L]
+RewriteRule ^api/client/readAll/$ api/client/readAllClient.php [L]
+RewriteRule ^api/client/readAll$ api/client/readAllClient.php [L]
+RewriteRule ^api/client/readAll/$ api/client/readAllClient.php [L]
+RewriteRule ^api/client/update$ api/client/updateClient.php [L]
+RewriteRule ^api/client/update/$ api/client/updateClient.php [L]
