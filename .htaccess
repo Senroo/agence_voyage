@@ -24,3 +24,7 @@ RewriteRule ^api/voyage/delete/$ api/voyage/deleteVoyage.php [L]
 #Rewrite URL pour l'api avis
 RewriteRule ^api/avis/create$ api/avis/createAvis.php [L]
 RewriteRule ^api/avis/create/$ api/avis/createAvis.php [L]
+RewriteRule ^api/avis/read/([0-9]+)$ api/avis/readAvis.php?avisID=$1 [L]
+RewriteRule ^api/avis/read/([0-9]+)/$ api/avis/readAvis.php?avisID=$1 [L]
+RewriteRule ^api/avis/readAll$ api/avis/readAllAvis.php [L]
+RewriteRule ^api/avis/readAll/$ api/avis/readAllAvis.php [L]

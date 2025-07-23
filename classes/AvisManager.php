@@ -52,6 +52,58 @@ class AvisManager{
     }
     /** Lire un avis */ 
 
+    /** Lire tous les avis */ 
+    public function ReadAllAvis(){
+        $sql = 'SELECT *
+                FROM certification_avis AS avis
+                JOIN certification_voyage AS voyage
+                ON voyage.voyageID = avis.voyageID
+                JOIN certification_client AS client
+                ON client.clientID = avis.clientID';
+        $req = $this->cnx->prepare($sql);
+        $req->execute();
+
+        $datas = []; // Init un tableau pour stocker les objets
+
+        while($data = $req->fetch(PDO::FETCH_ASSOC)){
+            $avis = new Avis();
+            foreach($data as $key => $value){
+                $method = 'set'.ucfirst($key);
+                if(method_exists($avis, $method)){
+                    $avis->$method($value);
+                }
+            }
+            $datas[] = $avis;
+        }
+
+        return $datas;
+    }
+    /** Lire tous les avis */ 
+
+    /** Compter le nombre de data dans la table*/
+    public function CountAvis(){
+        $sql = 'SELECT COUNT(*) AS compte FROM certification_avis';
+        $req = $this->cnx->prepare($sql);
+        $req->execute();
+
+        $data = $req->fetch(PDO::FETCH_ASSOC);
+        return $data['compte'];
+    }
+    /** Compter le nombre de data dans la table*/
+
+    /** Modifier un avis */
+    public function UpdateAvis(Avis $avis){
+        $sql = 'UPDATE certification_avis SET avis = :avis, voyageID = :voyageID, clientID = :clientID, toID = 1 WHERE avisID = :id';
+        $req = $this->cnx->prepare($sql);
+        $req->bindValue(':avis', $avis->getAvis(), PDO::PARAM_STR);
+        $req->bindValue(':voyageID', $avis->getVoyageID(), PDO::PARAM_STR);
+        $req->bindValue(':clientID', $avis->getClientID(), PDO::PARAM_STR);
+        $req->bindValue(':id', $avis->getAvisID(), PDO::PARAM_STR);
+        $req->execute();
+    }
+
+    /** Modifier un avis */
+
     /** Connexion PDO */  
     public function setCnx($cnx){
         $this->cnx = $cnx;
