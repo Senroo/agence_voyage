@@ -42,7 +42,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     } else {
         http_response_code(400);
         $message = [
-            'errorMessage' => 'Les champs avisID, avis, voyageID, clientID'
+            'errorMessage' => 'Les champs avis, voyageID, clientID'
         ];
         echo json_encode($message);
     }

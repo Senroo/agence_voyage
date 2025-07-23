@@ -101,8 +101,18 @@ class AvisManager{
         $req->bindValue(':id', $avis->getAvisID(), PDO::PARAM_STR);
         $req->execute();
     }
-
     /** Modifier un avis */
+
+    /** Supprimer un avis */
+    public function DeleteAvis(int $id){
+        $sql = 'DELETE FROM certification_avis WHERE avisID = :id';
+        $req = $this->cnx->prepare($sql);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
+        $req->execute();
+    } 
+    /** Supprimer un avis */
+
+
 
     /** Connexion PDO */  
     public function setCnx($cnx){
