@@ -1,59 +1,51 @@
-<?php
+<?php 
 use AgenceVoyage\Voyage;
 use AgenceVoyage\VoyageManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-////////////////// VERIFICATION DE LA METHODE
-if($_SERVER['REQUEST_METHOD'] == 'PUT'){
-    $data = json_decode(file_get_contents('php://input'), true);
-    if((!empty($data['titre'])) && (!empty($data['description'])) && (!empty($data['voyageID']))){
-        /** On va inclure les variables CNX et les classes */
-        include('../../config/cnx.php');
-        /** On va inclure les variables CNX et les classes */
-        /** On empeche la modification des voyage avec un ID inférieur à 2 */
-        if($data['voyageID'] > 2){
-            /** On affecte les valeurs à notre objet voyage */
-            $voyage = (new Voyage())
-                        ->setTitre($data['titre'])
-                        ->setDescription($data['description'])
-                        ->setVoyageID($data['voyageID']);
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-            /** On va instancier notre manager pour modifier le voyage*/
-            $manager = new VoyageManager($cnx);
-            $manager->UpdateVoyage($voyage);
-
-
-            /** Evoie d'un message pour confirmer la modification du voyage */
-            $message = [
-                'Message' => 'Voyage modifié, à noté qu\'il ne\'est pas possible de modifier les voyages avec l\'id 1 et 2'
-            ];
-            echo json_encode($message);
-        } else {
-            $message = [
-                'Message' => 'Voyage modifié, à noté qu\'il ne\'est pas possible de modifier les voyages avec l\'id 1 et 2'
-            ];
-            echo json_encode($message); 
-        }
-            /** Evoie d'un message pour confirmer la modification du voyage */
-    } else {
-        http_response_code(400);
-        $message = [
-            'errorMessage' => 'Les champs voyageID, titre, description sont obligatoire'
-        ];
-        echo json_encode($message);
-    }
-}else {
-    http_response_code(401);
-    $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode PUT'
-    ];
-
-    echo json_encode($message);
+//Check de la méthode
+if($_SERVER['REQUEST_METHOD'] !== 'PUT'){
+    JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode PUT');
 }
-////////////////// VERIFICATION DE LA METHODE
+
+//Lecture et décodage du JSON
+$data = json_decode(file_get_contents('php://input'), true);
+
+//Vérification de la qualité des données
+if(!isset($data['titre'], $data['description'], $data['voyageID']) || empty($data['titre']) || empty($data['description'])
+    || !is_numeric($data['voyageID'])){
+    JsonResponse::error('Les champs titre et description (string) et voyageID (int) sont obligatoire', 400);
+}
+
+// On protege les voyages avec les ID 1 et 2
+if($data['voyageID'] <= 2){
+    JsonResponse::error('Impossible de modifier les voyages avec l’ID 1 ou 2. Ces voyages sont protégés.');
+}
+
+//Si données OK : Création de l'objet voyages
+$voyage = (new Voyage())
+    ->setVoyageID($data['voyageID'])
+    ->setTitre(trim($data['titre']))
+    ->setDescription(trim($data['description']));
+
+//On modifie la donnée si elle existe
+$manager = new VoyageManager($cnx);
+$read = $manager->ReadTravel((int)$data['voyageID']);
+
+if($read == null){
+    JsonResponse::error('Impossible de modifier le voyage', 404, 'Aucun voyage correspondant trouvé');
+}
+
+// Modification autorisée uniquement pour les voyage dont l'ID est strictement supérieur à 2 et existe
+$manager->UpdateVoyage($voyage);
+
+JsonResponse::success('Voyage modifié avec succès', 200);

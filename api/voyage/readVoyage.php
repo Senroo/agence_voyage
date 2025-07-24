@@ -1,59 +1,38 @@
 <?php
 use AgenceVoyage\VoyageManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-////////////////// VERIFICATION DE LA METHODE
-if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    if(isset($_GET['voyageID'])){
-        if(is_numeric($_GET['voyageID'])){
-            /** On va inclure les variables CNX et les classes */
-            include('../../config/cnx.php');
-            /** On va inclure les variables CNX et les classes */
-            
-            $voyageID = $_GET['voyageID'];
-            $manager = new VoyageManager($cnx);
-            $voyage = $manager->ReadTravel($voyageID);
-            if($voyage !== null){
-                $message = [
-                    'voyageID'         => $voyage->getVoyageID(),
-                    'Titre'            => $voyage->getTitre(),
-                    'Description'      => $voyage->getDescription()
-                ];
-                echo json_encode($message);
-            } else {
-                $message = [
-                    'errorMessage' => 'Aucun voyage trouvé avec l\'ID = '.$voyageID
-                ];
-                
-                echo json_encode($message);
-            }
-        } else {
-            $message = [
-                'errorMessage' => 'Le voyageID doit être numérique'
-            ];
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-            echo json_encode($message);
-        }
+//Check de la méthode
+if($_SERVER['REQUEST_METHOD'] !== 'GET'){
+    JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode GET');
+}
 
-    } else {
-        $message = [
-            'errorMessage' => 'Vous devez rentrer un voyageID'
-        ];
+//Vérification de la qualité des données
+if(!isset($_GET['voyageID']) || empty($_GET['voyageID']) || !is_numeric($_GET['voyageID'])){
+    JsonResponse::error('Le parametre voyageID (int) est obligatoire', 400);
+}
 
-        echo json_encode($message);
-    }
-} else {
-    http_response_code(401);
+//Instanciation du manager pour la lire le voyage
+$manager = new VoyageManager($cnx);
+$data = $manager->ReadTravel($_GET['voyageID']);
+if($data !== null){
     $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode GET'
+        'voyageID'          => $data->getVoyageID(),
+        'titre'             => $data->getTitre(),
+        'description'       => $data->getDescription()
     ];
+    
+    JsonResponse::send($message);
 
-    echo json_encode($message);
-} 
-////////////////// VERIFICATION DE LA METHODE
+} else {
+    JsonResponse::error('Aucune donées trouvé', 404);
+}

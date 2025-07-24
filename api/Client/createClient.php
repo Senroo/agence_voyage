@@ -1,59 +1,40 @@
-<?php
+<?php 
 use AgenceVoyage\Client;
 use AgenceVoyage\ClientManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-////////////////// VERIFICATION DE LA METHODE
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    /** On récupere les data envoyé via un json */
-    $data = json_decode(file_get_contents('php://input'), true);
-    if((!empty($data['prenom'])) && (!empty($data['nom'])) && (!empty($data['email']))){
-        http_response_code(201);
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-        /** On va inclure les variables CNX et les classes */
-        include('../../config/cnx.php');
-        /** On va inclure les variables CNX et les classes */
+//Check de la méthode
+if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+    JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode POST');
+}
 
-        /** On affecte les valeurs à notre objet Client */
-        $client = (new Client())
-                    ->setPrenom($data['prenom'])
-                    ->setNom($data['nom'])
-                    ->setEmail($data['email']);
-        /** On affecte les valeurs à notre objet Client */
+//Lecture et décodage du JSON
+$data = json_decode(file_get_contents('php://input'), true);
 
-        /** On va instancier notre manager pour créer le client*/
-        $manager = new ClientManager($cnx);
-        $manager->AddClient($client);
-        /** On va instancier notre manager pour créer le client*/
+//Vérification de la qualité des données
+if(!isset($data['prenom'], $data['nom'], $data['email']) || empty($data['prenom']) ||
+empty($data['nom']) || empty($data['email'])){
+    JsonResponse::error('Les champs prenom, nom et email (string) sont obligatoire', 400);
+}
 
-        /** Evoie d'un message pour confirmer la création du client */
-        $message = [
-            'message' => 'Le client à bien été crée'
-        ];
+//Si données OK : Création de l'objet Client
+$client = (new Client())
+    ->setPrenom(trim($data['prenom']))
+    ->setNom(trim($data['nom']))
+    ->setEmail(trim($data['email']));
 
-        echo json_encode($message);
-        /** Evoie d'un message pour confirmer la création du client */
+//Instanciation du manager pour la création du client
+$manager = new ClientManager($cnx);
+$manager->AddClient($client);
 
-    } else {
-        http_response_code(400);
-        $message = [
-            'errorMessage' => 'Les champs prenom, nom et email sont obligatoire'
-        ];
-        echo json_encode($message);
-    }
+JsonResponse::success('Client ajouté', 201);
 
-} else {
-    http_response_code(401);
-    $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode POST'
-    ];
-
-    echo json_encode($message);
-} 
-////////////////// VERIFICATION DE LA METHODE

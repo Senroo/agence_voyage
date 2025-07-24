@@ -1,44 +1,34 @@
 <?php
 use AgenceVoyage\VoyageManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-////////////////// VERIFICATION DE LA METHODE
-if($_SERVER['REQUEST_METHOD'] == 'GET'){
-        /** On va inclure les variables CNX et les classes */
-        include('../../config/cnx.php');
-        /** On va inclure les variables CNX et les classes */
-        $manager = new VoyageManager($cnx);
-        $datas = $manager->ReadAllTravel();
-        $count = $manager->CountTravel();
-        if($count > 0){
-            $message = [];
-            foreach($datas as $data){
-                $message[] = array(
-                    'voyageID'         => $data->getVoyageID(),
-                    'Titre'            => $data->getTitre(),
-                    'Description'      => $data->getDescription()
-                );
-            }
-            echo json_encode($message);
-        } else {
-            $message = [
-                'Message' => 'Aucune donées trouvées',
-            ];
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-            echo json_encode($message);     
-        }
-} else {
-    http_response_code(401);
-    $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode GET'
-    ];
-
-    echo json_encode($message);
+//Check de la méthode
+if($_SERVER['REQUEST_METHOD'] !== 'GET'){
+    JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode GET');
 }
-////////////////// VERIFICATION DE LA METHODE
+
+//Instanciation du manager pour la lire tous les voyages
+$manager = new VoyageManager($cnx);
+$datas = $manager->ReadAllTravel();
+if(!empty($datas)){
+    $messages = [];
+    foreach($datas as $data){
+        $messages[] = array(
+            'voyageID'          => $data->getVoyageID(),
+            'titre'             => $data->getTitre(),
+            'description'       => $data->getDescription()
+        );
+    }
+    JsonResponse::send($messages);
+} else {
+    JsonResponse::error('Aucune donées trouvé', 404);
+}

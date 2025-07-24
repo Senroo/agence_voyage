@@ -1,51 +1,41 @@
 <?php
 use AgenceVoyage\VoyageManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: DELETE');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-if($_SERVER['REQUEST_METHOD'] == 'DELETE'){
-    $data = json_decode(file_get_contents('php://input'), true);
-    if(isset($data['voyageID'])){
-        if(!empty($data['voyageID'])){
-                /** On va inclure les variables CNX et les classes */
-                include('../../config/cnx.php');
-                /** On va inclure les variables CNX et les classes */
-                if($data['voyageID'] > 2){
-                    $manager = new VoyageManager($cnx);
-                    $manager->DeleteTravel($data['voyageID']);
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-                    $message = [
-                        'Message' => 'Voyage supprimé. à noté qu\'il ne\'est pas possible de supprimer les voyage avec l\'id 1 et 2'
-                    ];
-                    echo json_encode($message);
-                } else {
-                    $message = [
-                        'Message' => 'Voyage supprimé. à noté qu\'il ne\'est pas possible de supprimer les voyage avec l\'id 1 et 2'
-                    ];
-                    echo json_encode($message);  
-                }
-            } else {
-                $message = [
-                    'Message' => 'Il faut rentrer un voyageID'
-                ];
-                echo json_encode($message);
-            }
-    } else {
-        $message = [
-            'Message' => 'Il faut rentrer un voyageID'
-        ];
-        echo json_encode($message);
-    }
-}else {
-    http_response_code(401);
-    $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode DELETE'
-    ];
-
-    echo json_encode($message);
+if($_SERVER['REQUEST_METHOD'] !== 'DELETE'){
+    JsonResponse::error('Méthode non-autorisé', 405, 'Vous devez utiliser la méthode DELETE');
 }
+
+//Lecture et décodage du JSON
+$data = json_decode(file_get_contents('php://input'), true);
+
+//Vérification de la qualité des données
+if(!isset($data['voyageID']) || empty($data['voyageID']) || !is_numeric($data['voyageID'])){
+    JsonResponse::error('Le champ voyageID (int) est obligatoire', 400);
+}
+
+//On supprime le voyage seulement si elle existe
+$manager = new VoyageManager($cnx);
+$read = $manager->ReadTravel($data['voyageID']);
+
+if($read == null){
+    JsonResponse::error('Voyage introuvable', 404);
+}
+
+// On protege les avis avec les ID 1 et 2
+if($data['voyageID'] <= 2){
+    JsonResponse::error('Impossible de supprimer les voyages avec l’ID 1 ou 2. Ces voyages sont protégés.', 403);
+}
+
+//Instanciation du manager pour supprimer le voyage si son ID est strictement supérieur à 2
+$manager->DeleteTravel($data['voyageID']);
+JsonResponse::success('Voyage supprimé avec succès', 200);

@@ -2,21 +2,21 @@
 namespace AgenceVoyage;
 class Avis{
     /** Attribut de la table avis */
-    private $avisID;
-    private $avis;
-    private $voyageID;
-    private $clientID;
+    private int $avisID;
+    private string $avis;
+    private int $voyageID;
+    private int $clientID;
     /** Attribut de la table avis */
 
     /** Attribut de la table voyage */
-    private $titre;
-    private $description;
+    private string $titre;
+    private string $description;
     /** Attribut de la table voyage */
 
     /** Attribut de la table client */
-    private $prenom;
-    private $nom;
-    private $email;
+    private string $prenom;
+    private string $nom;
+    private string $email;
     /** Attribut de la table client */
 
     public function setAvisID($avisID): self{

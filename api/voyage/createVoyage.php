@@ -1,58 +1,43 @@
-<?php
+<?php 
 use AgenceVoyage\Voyage;
 use AgenceVoyage\VoyageManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-////////////////// VERIFICATION DE LA METHODE
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    /** On récupere les data envoyé via un json */
-    $data = json_decode(file_get_contents('php://input'), true);
-    if((!empty($data['titre'])) && (!empty($data['description']))){
-        http_response_code(201);
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-        /** On va inclure les variables CNX et les classes */
-        include('../../config/cnx.php');
-        /** On va inclure les variables CNX et les classes */
+//Check de la méthode
+if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+    JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode POST');
+}
 
-        /** On affecte les valeurs à notre objet Client */
-        $voyage = (new Voyage())
-                    ->setTitre($data['titre'])
-                    ->setDescription($data['description']);
-        /** On affecte les valeurs à notre objet Client */
+//Lecture et décodage du JSON
+$data = json_decode(file_get_contents('php://input'), true);
 
-        /** On va instancier notre manager pour créer le voyage*/
-        $manager = new VoyageManager($cnx);
-        $manager->AddTravel($voyage);
-        /** On va instancier notre manager pour créer le voyage*/
+//Vérification de la qualité des données
+if(!isset($data['titre'], $data['description']) || empty($data['titre']) || empty($data['description'])){
+    JsonResponse::error('Les champs titre et description (string) sont obligatoire', 400);
+}
 
-        /** Evoie d'un message pour confirmer la création du voyage */
-        $message = [
-            'message' => 'Le voyage à bien été crée'
-        ];
+//Vérification de la longueur du titre
+if(strlen($data['titre']) > 250){
+    JsonResponse::error('Le titre ne doit pas faire plus de 255 caractères', 400);
+}
 
-        echo json_encode($message);
-        /** Evoie d'un message pour confirmer la création du voyage */
+//Si données OK : Création de l'objet voyage
+$voyage = (new Voyage())
+    ->setTitre(trim($data['titre']))
+    ->setDescription(trim($data['description']));
 
-    } else {
-        http_response_code(400);
-        $message = [
-            'errorMessage' => 'Les champs titre, description'
-        ];
-        echo json_encode($message);
-    }
+//Instanciation du manager pour la création du voyage
+$manager = new VoyageManager($cnx);
+$manager->AddTravel($voyage);
 
-} else {
-    http_response_code(401);
-    $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode POST'
-    ];
+JsonResponse::success('Voyage ajouté', 201);
 
-    echo json_encode($message);
-} 
-////////////////// VERIFICATION DE LA METHODE

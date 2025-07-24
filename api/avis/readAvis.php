@@ -1,69 +1,48 @@
 <?php
 use AgenceVoyage\AvisManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-////////////////// VERIFICATION DE LA METHODE
-if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    if(isset($_GET['avisID'])){
-        if(is_numeric($_GET['avisID'])){
-            /** On va inclure les variables CNX et les classes */
-            include('../../config/cnx.php');
-            /** On va inclure les variables CNX et les classes */
-            
-            $avisID = $_GET['avisID'];
-            $manager = new AvisManager($cnx);
-            $avis = $manager->ReadAvis($avisID);
-            if($avis !== null){
-                $message = [
-                    'avisID'   => $avis->getAvisID(),
-                    'avis'     => $avis->getAvis(),
-                    'voyageID' => $avis->getVoyageID(),
-                    'clientID' => $avis->getClientID(),
-                    'voyage' => [
-                        'titre' => $avis->getTitre(),
-                        'description' => $avis->getDescription()
-                    ],
-                    'client' => [
-                        'prenom' => $avis->getPrenom(),
-                        'nom' => $avis->getNom(),
-                        'email' => $avis->getEmail()
-                    ]
-                ];
-                echo json_encode($message);
-            } else {
-                $message = [
-                    'errorMessage' => 'Aucun avis trouvé avec l\'ID = '.$avisID
-                ];
-                
-                echo json_encode($message);
-            }
-        } else {
-            $message = [
-                'errorMessage' => 'AvisID doit être numérique'
-            ];
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-            echo json_encode($message);
-        }
+//Check de la méthode
+if($_SERVER['REQUEST_METHOD'] !== 'GET'){
+    JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode GET');
+}
 
-    } else {
-        $message = [
-            'errorMessage' => 'Vous devez rentrer un avisID'
-        ];
+//Vérification de la qualité des données
+if(!isset($_GET['avisID']) || empty($_GET['avisID']) || !is_numeric($_GET['avisID'])){
+    JsonResponse::error('Le parametre avisID (int) est obligatoire', 400);
+}
 
-        echo json_encode($message);
-    }
-} else {
-    http_response_code(401);
+//Instanciation du manager pour la lire l'avi
+$manager = new AvisManager($cnx);
+$data = $manager->ReadAvis($_GET['avisID']);
+if($data !== null){
     $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode GET'
+        'avisID'   => $data->getAvisID(),
+        'avis'     => $data->getAvis(),
+        'voyageID' => $data->getVoyageID(),
+        'clientID' => $data->getClientID(),
+        'voyage' => [
+            'titre' => $data->getTitre(),
+            'description' => $data->getDescription()
+        ],
+        'client' => [
+            'prenom' => $data->getPrenom(),
+            'nom' => $data->getNom(),
+            'email' => $data->getEmail()
+        ]
     ];
+    
+    JsonResponse::send($message);
 
-    echo json_encode($message);
-} 
-////////////////// VERIFICATION DE LA METHODE
+} else {
+    JsonResponse::error('Aucune donées trouvé', 404);
+}

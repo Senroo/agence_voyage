@@ -1,60 +1,39 @@
 <?php
 use AgenceVoyage\ClientManager;
-////////////////// ZONE DE CONTROLE
+use Utilities\JsonResponse;
+
+// Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
-////////////////// ZONE DE CONTROLE
 
-////////////////// VERIFICATION DE LA METHODE
-if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    if(isset($_GET['clientID'])){
-        if(is_numeric($_GET['clientID'])){
-            /** On va inclure les variables CNX et les classes */
-            include('../../config/cnx.php');
-            /** On va inclure les variables CNX et les classes */
-            
-            $clientID = $_GET['clientID'];
-            $manager = new ClientManager($cnx);
-            $client = $manager->ReadClient($clientID);
-            if($client !== null){
-                $message = [
-                    'clientID' => $client->getClientID(),
-                    'Prenom'   => $client->getPrenom(),
-                    'Nom'      => $client->getNom(),
-                    'Email'    => $client->getEmail()
-                ];
-                echo json_encode($message);
-            } else {
-                $message = [
-                    'errorMessage' => 'Aucun client trouvé avec l\'ID = '.$clientID
-                ];
-                
-                echo json_encode($message);
-            }
-        } else {
-            $message = [
-                'errorMessage' => 'Le clientID doit être numérique'
-            ];
+//Chargement du dossier utilities et classes
+require_once('../../config/cnx.php');
 
-            echo json_encode($message);
-        }
+//Check de la méthode
+if($_SERVER['REQUEST_METHOD'] !== 'GET'){
+    JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode GET');
+}
 
-    } else {
-        $message = [
-            'errorMessage' => 'Vous devez rentrer un clientID'
-        ];
+//Vérification de la qualité des données
+if(!isset($_GET['clientID']) || empty($_GET['clientID']) || !is_numeric($_GET['clientID'])){
+    JsonResponse::error('Le parametre clientID (int) est obligatoire', 400);
+}
 
-        echo json_encode($message);
-    }
-} else {
-    http_response_code(401);
+//Instanciation du manager pour la lire le client
+$manager = new ClientManager($cnx);
+$data = $manager->ReadClient($_GET['clientID']);
+if($data !== null){
     $message = [
-        'errorMessage' => 'Vous avez utiliser la mauvaise méthode',
-        'explication'  => 'Vous devez une méthode GET'
+        'clientID'  => $data->getClientID(),
+        'prenom'    => $data->getPrenom(),
+        'nom'       => $data->getNom(),
+        'email'     => $data->getEmail()
     ];
+    
+    JsonResponse::send($message);
 
-    echo json_encode($message);
-} 
-////////////////// VERIFICATION DE LA METHODE
+} else {
+    JsonResponse::error('Aucune donées trouvé', 404);
+}
