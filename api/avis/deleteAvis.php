@@ -8,8 +8,11 @@ header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: DELETE');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
 
+if (php_sapi_name() === 'cli') return;
+
 //Chargement du dossier utilities et classes
-require_once('../../config/cnx.php');
+require_once __DIR__ . '/../../config/cnx.php';
+
 
 if($_SERVER['REQUEST_METHOD'] !== 'DELETE'){
     JsonResponse::error('Méthode non-autorisé', 405, 'Vous devez utiliser la méthode DELETE');

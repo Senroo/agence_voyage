@@ -9,7 +9,10 @@ header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
 
 //Chargement du dossier utilities et classes
-require_once('../../config/cnx.php');
+require_once __DIR__ . '/../../config/cnx.php';
+
+if (php_sapi_name() === 'cli') return;
+
 
 //Check de la méthode
 if($_SERVER['REQUEST_METHOD'] !== 'GET'){

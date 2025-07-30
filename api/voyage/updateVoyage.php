@@ -9,8 +9,12 @@ header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
 
+if (php_sapi_name() === 'cli') return;
+
+
 //Chargement du dossier utilities et classes
-require_once('../../config/cnx.php');
+require_once __DIR__ . '/../../config/cnx.php';
+
 
 //Check de la méthode
 if($_SERVER['REQUEST_METHOD'] !== 'PUT'){

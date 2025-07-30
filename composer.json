@@ -5,7 +5,8 @@
     "autoload": {
         "psr-4": {
             "AgenceVoyage\\": "classes/",
-            "Utilities\\": "utilities/"
+            "Utilities\\": "utilities/",
+            "Api\\": "api/"
         }
     },
     "authors": [
@@ -15,5 +16,7 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "zircote/swagger-php": "^5.1"
+    }
 }

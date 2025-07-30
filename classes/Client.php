@@ -1,6 +1,36 @@
 <?php
 namespace AgenceVoyage;
+use OpenApi\Attributes as OA;
+
 class Client{
+
+#[OA\Schema(
+    schema:'Client',
+    type:'object',
+    description:'Représente un client',
+    properties:[
+        new OA\Property(
+            property:'clientID',
+            type:'integer',
+            description:'Clé unique du client'
+        ),
+        new OA\Property(
+            property:'prenom',
+            type:'string',
+            description: 'Prénom du client'
+        ),
+        new OA\Property(
+            property:'nom',
+            type:'string',
+            description: 'Nom du client'
+        ),
+        new OA\Property(
+            property:'email',
+            type:'string',
+            description: 'Email du client'
+        ),
+    ]
+)]
     private $clientID;
     private $prenom;
     private $nom;

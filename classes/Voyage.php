@@ -1,6 +1,30 @@
 <?php 
 namespace AgenceVoyage;
+use OpenApi\Attributes as OA;
 class Voyage{
+
+#[OA\Schema(
+    schema:'Voyage',
+    type:'object',
+    description: 'Représente un voyage',
+    properties:[
+        new OA\Property(
+            property:'voyageID',
+            type:'integer',
+            description:'Clé unique du voyage'
+        ),
+        new OA\Property(
+            property:'titre',
+            type:'string',
+            description:'Titre du voyage'
+        ),
+        new OA\Property(
+            property:'description',
+            type:'string',
+            description:'Description du voyage'
+        ),
+    ]
+)]
     private $voyageID;
     private $titre;
     private $description;

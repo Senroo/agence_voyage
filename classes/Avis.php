@@ -1,6 +1,104 @@
 <?php
 namespace AgenceVoyage;
+
+use OpenApi\Attributes as OA;
 class Avis{
+
+#[OA\Schema(
+    schema: 'Avis',
+    type: 'object',
+    description: 'Représente un avis client',
+    properties:[
+        new OA\Property(
+            property:'avisID',
+            type: 'integer',
+            description:'Clé unique de l\'avis'
+        ),
+        new OA\Property(
+            property:'avis',
+            type:'string',
+            description:'avis du client sur le voyage'
+        ),
+        new OA\Property(
+            property:'voyageID',
+            type:'integer',
+            description:'Identifiant du voyage'
+        ),
+        new OA\Property(
+            property:'clientID',
+            type:'integer',
+            description:'Identifiant du client'
+        )
+    ],
+)]
+
+#[OA\Schema(
+    schema: 'Aviss',
+    type:'object',
+    description: 'Affichage d\'un avis client',
+    properties:[
+        new OA\Property(
+            property:'avisID',
+            type: 'integer',
+            description:'Clé unique de l\'avis'
+        ),
+        new OA\Property(
+            property:'avis',
+            type:'string',
+            description:'avis du client sur le voyage'
+        ),
+        new OA\Property(
+            property:'voyageID',
+            type:'integer',
+            description:'Identifiant du voyage'
+        ),
+        new OA\Property(
+            property:'clientID',
+            type:'integer',
+            description:'Identifiant du client'
+        ),
+        new OA\Property(
+            property: 'voyage',
+            type:'object',
+            description:'Détails du voyage',
+            properties: [
+                new OA\Property(
+                    property:'titre',
+                    type:'string',
+                    description:'Titre du voyage'
+                ),
+                new OA\Property(
+                    property:'description',
+                    type:'string',
+                    description:'Description du voyage'
+                ),
+            ]
+        ),
+        new OA\Property(
+            property:'client',
+            type:'object',
+            description:'Détails du client',
+            properties:[
+                new OA\Property(
+                    property:'prenom',
+                    type:'string',
+                    description: 'Prénom du client'
+                ),
+                new OA\Property(
+                    property:'nom',
+                    type:'string',
+                    description: 'Nom du client'
+                ),
+                new OA\Property(
+                    property:'email',
+                    type:'string',
+                    description: 'Email du client'
+                ),
+            ]
+        )
+    ]
+
+)]
     /** Attribut de la table avis */
     private int $avisID;
     private string $avis;

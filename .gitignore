@@ -1,2 +1,3 @@
 /vendor/
 .htaccess
+api/swagger/swagger.json
