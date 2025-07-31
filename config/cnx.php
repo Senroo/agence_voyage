@@ -12,7 +12,6 @@ try {
     http_response_code(500);
     echo json_encode([
         "error" => "Erreur de connexion à la base de données.",
-        "detail" => $e->getMessage() // ⚠️ À désactiver en prod
     ]);
     exit;
 }

@@ -1,6 +1,11 @@
 <?php 
 namespace AgenceVoyage;
 use OpenApi\Attributes as OA;
+
+/**
+ * Classe représentant un voyage enregistré dans la base de données.
+ */
+
 class Voyage{
 
 #[OA\Schema(
@@ -25,10 +30,12 @@ class Voyage{
         ),
     ]
 )]
-    private $voyageID;
-    private $titre;
-    private $description;
-    private $toID;
+
+    private int $voyageID;
+    private string $titre;
+    private string $description;
+    private int $toID;
+
 
     public function setVoyageID($voyageID): self{
         $this->voyageID = $voyageID;

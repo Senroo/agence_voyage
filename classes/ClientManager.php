@@ -8,14 +8,16 @@ use OpenApi\Attributes as OA;
 class ClientManager{
     private $cnx;
 
-    /** Rendre la variable de connexion obligatoire */ 
+/** Initialise la connexion PDO (obligatoire) */
+
     public function __construct($cnx)
     {
         $this->setCNX($cnx);                
     }
-    /** Rendre la variable de connexion obligatoire */ 
 
-    /** Ajouter un client */ 
+/** Initialise la connexion PDO (obligatoire) */
+
+/** Insère un nouveau client en base de données */
 
 #[OA\Post(
     path: '/client/create',
@@ -51,7 +53,7 @@ class ClientManager{
         ]
     ),
     responses: [
-        new OA\Response(response: 201, description: 'Inserer les datas'),
+        new OA\Response(response: 201, description: 'Client ajouté avec succès'),
         new OA\Response(response: 400, description: 'Tous les champs sont obligatoires'),
         new OA\Response(response: 405, description: 'Méthode non autorisée')
     ]
@@ -66,9 +68,10 @@ class ClientManager{
 
         $req->execute();
     }   
-    /** Ajouter un client */ 
+/** Insère un nouveau client en base de données */
 
-    /** Afficher un client*/
+/** Récupère un client par son ID */
+
 #[OA\Get(
     path: '/client/read/{clientID}',
     tags: ['Client'],
@@ -114,9 +117,10 @@ class ClientManager{
             return null;
         }
     }
-    /** Afficher un client */ 
+/** Récupère un client par son ID */
 
-    /** Afficher tous les clients*/ 
+/** Récupère la liste de tous les clients */
+
 #[OA\Get(
     path:'/client/readAll',
     tags: ['Client'],
@@ -154,9 +158,10 @@ class ClientManager{
 
         return $clients;
     }   
-    /** Afficher tous les clients*/ 
+/** Récupère la liste de tous les clients */
     
-    /** Compter le nombre de data dans la table*/
+/** Retourne le nombre total de clients enregistrés */
+
     public function CountClient(){
         $sql = 'SELECT COUNT(*) as compte FROM certification_client';
         $req = $this->cnx->prepare($sql);
@@ -165,9 +170,11 @@ class ClientManager{
         $data = $req->fetch(PDO::FETCH_ASSOC);
         return $data['compte'];
     }
-    /** Compter le nombre de data dans la table*/
 
-    /** Modifier un client*/
+/** Retourne le nombre total de clients enregistrés */
+
+/** Met à jour les informations d’un client */
+
 #[OA\Put(
     path: '/client/update',
     tags: ['Client'],
@@ -222,9 +229,11 @@ class ClientManager{
         $req->execute();
 
     }
-    /** Modifier un client*/   
 
-    /** Supprimer un client*/  
+/** Met à jour les informations d’un client */
+
+
+/** Supprime un client à partir de son ID */
 
 #[OA\Delete(
     path: '/client/delete',
@@ -261,11 +270,16 @@ class ClientManager{
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->execute();
     } 
-    /** Supprimer un client*/   
+
+/** Supprime un client à partir de son ID */
+
     
-    /** Connexion PDO */  
+/** Injecte la connexion PDO */
+ 
     public function setCNX($cnx){
         $this->cnx = $cnx;
     }
-    /** Connexion PDO */
+
+/** Injecte la connexion PDO */
+
 }

@@ -8,15 +8,16 @@ header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: DELETE');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
 
+// Pour éviter les bugs liés à Swagger et swagger-bootstrap
 if (php_sapi_name() === 'cli') return;
 
 
-//Chargement du dossier utilities et classes
+// Chargement des classes et utilitaires
 require_once __DIR__ . '/../../config/cnx.php';
 
-
+// Vérifie que la méthode HTTP est bien DELETE
 if($_SERVER['REQUEST_METHOD'] !== 'DELETE'){
-    JsonResponse::error('Méthode non-autorisé', 405, 'Vous devez utiliser la méthode DELETE');
+    JsonResponse::error('Méthode non autorisée', 405, 'Vous devez utiliser la méthode DELETE');
 }
 
 //Lecture et décodage du JSON
@@ -27,7 +28,7 @@ if(!isset($data['voyageID']) || empty($data['voyageID']) || !is_numeric($data['v
     JsonResponse::error('Le champ voyageID (int) est obligatoire', 400);
 }
 
-//On supprime le voyage seulement si elle existe
+// On supprime le voyage uniquement s’il existe
 $manager = new VoyageManager($cnx);
 $read = $manager->ReadTravel($data['voyageID']);
 

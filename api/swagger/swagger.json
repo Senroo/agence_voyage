@@ -29,7 +29,7 @@
                     "Avis"
                 ],
                 "summary": "Ajouter un avis",
-                "description": "Ajouter un avis",
+                "description": "Insère un nouvel avis en base de données",
                 "operationId": "45721ba52b485f856844c9dcdfe7c45f",
                 "requestBody": {
                     "required": true,
@@ -82,7 +82,7 @@
                     "Avis"
                 ],
                 "summary": "Lire un avis",
-                "description": "Lire un avis",
+                "description": "Récupère un avis détaillé (client + voyage) par ID",
                 "operationId": "fd70686119bc63ccc1df50d658920b1d",
                 "parameters": [
                     {
@@ -118,7 +118,7 @@
                     "Avis"
                 ],
                 "summary": "Afficher tous les avis",
-                "description": "Lire tous les avis",
+                "description": "Récupère tous les avis avec les détails client et voyage",
                 "operationId": "36b030ee45ab361a735fdbc1f30f453e",
                 "responses": {
                     "200": {
@@ -145,8 +145,8 @@
                 "tags": [
                     "Avis"
                 ],
-                "summary": "Modifier un client",
-                "description": "Modifier un avis",
+                "summary": "Modifier un avis",
+                "description": "Met à jour les données d’un avis",
                 "operationId": "141a8dde69ed5fe7982f98b6c6b4798f",
                 "requestBody": {
                     "required": true,
@@ -205,7 +205,7 @@
                     "Avis"
                 ],
                 "summary": "Supprimer un Avis",
-                "description": "Supprimer un avis",
+                "description": "Supprime un avis par son identifiant",
                 "operationId": "83ee9df6754ea6237c69088f782e0857",
                 "requestBody": {
                     "required": true,
@@ -246,7 +246,7 @@
                     "Client"
                 ],
                 "summary": "Ajouter un client",
-                "description": "Ajouter un client",
+                "description": "Insère un nouveau client en base de données",
                 "operationId": "856d9fa4a49e5034542af838f77fb6e8",
                 "requestBody": {
                     "required": true,
@@ -279,7 +279,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Inserer les datas"
+                        "description": "Client ajouté avec succès"
                     },
                     "400": {
                         "description": "Tous les champs sont obligatoires"
@@ -296,7 +296,7 @@
                     "Client"
                 ],
                 "summary": "Voir un client",
-                "description": "Afficher un client",
+                "description": "Récupère un client par son ID",
                 "operationId": "f0fa58d6ed8e44256fdb76a325b01210",
                 "parameters": [
                     {
@@ -332,7 +332,7 @@
                     "Client"
                 ],
                 "summary": "Afficher tous les clients",
-                "description": "Afficher tous les clients",
+                "description": "Récupère la liste de tous les clients",
                 "operationId": "b7cf2c4bcbe496d142f4d212ba5ba956",
                 "responses": {
                     "200": {
@@ -360,7 +360,7 @@
                     "Client"
                 ],
                 "summary": "Modifier un client",
-                "description": "Modifier un client",
+                "description": "Met à jour les informations d’un client",
                 "operationId": "80e1c0b753a851e1899d183d66fddb1f",
                 "requestBody": {
                     "required": true,
@@ -415,7 +415,7 @@
                     "Client"
                 ],
                 "summary": "Supprimer un client",
-                "description": "Supprimer un client",
+                "description": "Supprime un client à partir de son ID",
                 "operationId": "49c1c29cf36139739f5945e43da1c5d9",
                 "requestBody": {
                     "required": true,
@@ -456,7 +456,7 @@
                     "Voyage"
                 ],
                 "summary": "Ajouter un voyage",
-                "description": "Ajouter un voyage",
+                "description": "Insère un nouveau voyage en base de données",
                 "operationId": "a71f7e57c1cc0f0c5825049bae08ad1c",
                 "requestBody": {
                     "required": true,
@@ -484,7 +484,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Inserer les datas"
+                        "description": "Voyage ajouté avec succès"
                     },
                     "400": {
                         "description": "Tous les champs sont obligatoires"
@@ -501,7 +501,7 @@
                     "Voyage"
                 ],
                 "summary": "Voir un voyage",
-                "description": "Afficher un voyage",
+                "description": "Récupère un voyage par son ID",
                 "operationId": "e21ef168fc52b223ff10d7a30dda4f01",
                 "parameters": [
                     {
@@ -537,7 +537,7 @@
                     "Voyage"
                 ],
                 "summary": "Afficher tous les voyages",
-                "description": "Afficher tous les voyage",
+                "description": "Récupère la liste de tous les voyages",
                 "operationId": "c101af245e85e23833efbf867c8c2ffc",
                 "responses": {
                     "200": {
@@ -565,7 +565,7 @@
                     "Voyage"
                 ],
                 "summary": "Modifier un voyage",
-                "description": "Modifier un voyage",
+                "description": "Met à jour les informations d’un voyage",
                 "operationId": "903d5d855dc7f01e6618bffc82cd8db9",
                 "requestBody": {
                     "required": true,
@@ -615,7 +615,7 @@
                     "Voyage"
                 ],
                 "summary": "Supprimer un voyage",
-                "description": "Supprimer un voyage",
+                "description": "Supprime un voyage à partir de son ID",
                 "operationId": "f0430e289912b7e5962abda8e699ef07",
                 "requestBody": {
                     "required": true,

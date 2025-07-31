@@ -10,14 +10,15 @@ use OpenApi\Attributes as OA;
 class AvisManager{
     private $cnx;
 
-    /** Rendre la variable de connexion obligatoire */ 
+/** Initialise la connexion PDO (obligatoire) */
     public function __construct($cnx)
     {
         $this->setCNX($cnx);                
     }
-    /** Rendre la variable de connexion obligatoire */
+/** Initialise la connexion PDO (obligatoire) */
 
-    /** Ajouter un avis */ 
+/** Insère un nouvel avis en base de données */
+
 #[OA\Post(
     path: '/avis/create',
     tags: ['Avis'],
@@ -68,9 +69,11 @@ class AvisManager{
         $req->bindValue(':clientID', $avis->getClientID(), PDO::PARAM_INT);
         $req->execute();
     }   
-    /** Ajouter un avis */ 
+/** Insère un nouvel avis en base de données */
 
-    /** Lire un avis */
+
+/** Récupère un avis détaillé (client + voyage) par ID */
+
 #[OA\Get(
     path: '/avis/read/{avisID}',
     tags: ['Avis'],
@@ -122,9 +125,11 @@ class AvisManager{
         }
         return $avis;
     }
-    /** Lire un avis */ 
+/** Récupère un avis détaillé (client + voyage) par ID */
 
-    /** Lire tous les avis */
+
+/** Récupère tous les avis avec les détails client et voyage */
+
 #[OA\Get(
     path:'/avis/readAll',
     tags: ['Avis'],
@@ -168,9 +173,11 @@ class AvisManager{
 
         return $datas;
     }
-    /** Lire tous les avis */ 
+/** Récupère tous les avis avec les détails client et voyage */
 
-    /** Compter le nombre de data dans la table*/
+
+/** Retourne le nombre total d'avis enregistrés */
+
     public function CountAvis(){
         $sql = 'SELECT COUNT(*) AS compte FROM certification_avis';
         $req = $this->cnx->prepare($sql);
@@ -179,13 +186,15 @@ class AvisManager{
         $data = $req->fetch(PDO::FETCH_ASSOC);
         return $data['compte'];
     }
-    /** Compter le nombre de data dans la table*/
+/** Retourne le nombre total d'avis enregistrés */
 
-    /** Modifier un avis */
+
+/** Met à jour les données d’un avis */
+
 #[OA\Put(
     path: '/avis/update',
     tags: ['Avis'],
-    summary: 'Modifier un client',
+    summary: 'Modifier un avis',
     requestBody: new OA\RequestBody(
         required: true,
         content:[
@@ -234,14 +243,15 @@ class AvisManager{
         $sql = 'UPDATE certification_avis SET avis = :avis, voyageID = :voyageID, clientID = :clientID, toID = 1 WHERE avisID = :id';
         $req = $this->cnx->prepare($sql);
         $req->bindValue(':avis', $avis->getAvis(), PDO::PARAM_STR);
-        $req->bindValue(':voyageID', $avis->getVoyageID(), PDO::PARAM_STR);
-        $req->bindValue(':clientID', $avis->getClientID(), PDO::PARAM_STR);
-        $req->bindValue(':id', $avis->getAvisID(), PDO::PARAM_STR);
+        $req->bindValue(':voyageID', $avis->getVoyageID(), PDO::PARAM_INT);
+        $req->bindValue(':clientID', $avis->getClientID(), PDO::PARAM_INT);
+        $req->bindValue(':id', $avis->getAvisID(), PDO::PARAM_INT);
         $req->execute();
     }
-    /** Modifier un avis */
+/** Met à jour les données d’un avis */
 
-    /** Supprimer un avis */
+
+/** Supprime un avis par son identifiant */
 
 #[OA\Delete(
     path: '/avis/delete',
@@ -278,14 +288,14 @@ class AvisManager{
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->execute();
     } 
-    /** Supprimer un avis */
+/** Supprime un avis par son identifiant */
 
+/** Injecte la connexion PDO */
 
-
-    /** Connexion PDO */  
     public function setCnx($cnx){
         $this->cnx = $cnx;
     }
-    /** Connexion PDO */
+/** Injecte la connexion PDO */
+
 
 }

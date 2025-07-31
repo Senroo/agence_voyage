@@ -1,7 +1,11 @@
 <?php
 namespace AgenceVoyage;
-
 use OpenApi\Attributes as OA;
+
+/**
+ * Classe représentant un avis enregistré dans la base de données.
+ */
+
 class Avis{
 
 #[OA\Schema(
@@ -99,23 +103,25 @@ class Avis{
     ]
 
 )]
-    /** Attribut de la table avis */
+
+    /** Attributs issus de la table "avis" */
     private int $avisID;
     private string $avis;
     private int $voyageID;
     private int $clientID;
-    /** Attribut de la table avis */
+    /** Fin des attributs "avis" */
 
-    /** Attribut de la table voyage */
+    /** Attributs issus de la table "voyage" */
     private string $titre;
     private string $description;
-    /** Attribut de la table voyage */
+    /** Fin des attributs "voyage" */
 
-    /** Attribut de la table client */
+    /** Attributs issus de la table "client" */
     private string $prenom;
     private string $nom;
     private string $email;
-    /** Attribut de la table client */
+    /** Fin des attributs "client" */
+
 
     public function setAvisID($avisID): self{
         $this->avisID = $avisID;

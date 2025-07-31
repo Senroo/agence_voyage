@@ -2,6 +2,11 @@
 namespace AgenceVoyage;
 use OpenApi\Attributes as OA;
 
+/**
+ * Classe représentant un client enregistré dans la base de données.
+ */
+
+
 class Client{
 
 #[OA\Schema(
@@ -31,11 +36,11 @@ class Client{
         ),
     ]
 )]
-    private $clientID;
-    private $prenom;
-    private $nom;
-    private $email;
-    private $toID;
+    private int $clientID;
+    private string $prenom;
+    private string $nom;
+    private string $email;
+    private int $toID;
 
     public function setClientID($clientID): self{
         $this->clientID = $clientID;

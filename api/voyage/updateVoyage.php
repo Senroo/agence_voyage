@@ -9,14 +9,15 @@ header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
 
+// Pour éviter les bugs liés à Swagger et swagger-bootstrap
 if (php_sapi_name() === 'cli') return;
 
 
-//Chargement du dossier utilities et classes
+// Chargement des classes et utilitaires
 require_once __DIR__ . '/../../config/cnx.php';
 
 
-//Check de la méthode
+// Vérifie que la méthode HTTP est bien PUT
 if($_SERVER['REQUEST_METHOD'] !== 'PUT'){
     JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode PUT');
 }
@@ -27,7 +28,11 @@ $data = json_decode(file_get_contents('php://input'), true);
 //Vérification de la qualité des données
 if(!isset($data['titre'], $data['description'], $data['voyageID']) || empty($data['titre']) || empty($data['description'])
     || !is_numeric($data['voyageID'])){
-    JsonResponse::error('Les champs titre et description (string) et voyageID (int) sont obligatoire', 400);
+    JsonResponse::error('Les champs titre et description (string) et voyageID (int) sont obligatoires', 400);
+}
+
+if(strlen($data['titre']) > 250){
+    JsonResponse::error('Le titre ne doit pas dépasser 255 caractères', 400);
 }
 
 // On protege les voyages avec les ID 1 et 2

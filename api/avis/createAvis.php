@@ -9,35 +9,35 @@ header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods, Content-Type, Authorization, x-Requested-With');
 
-//Pour eviter les bugs lier à swagger et le swagger-booststrap
+// Pour éviter les bugs liés à Swagger et swagger-bootstrap
 if (php_sapi_name() === 'cli') return;
 
 
-//Chargement du dossier utilities et classes
+// Chargement des classes et utilitaires
 require_once __DIR__ . '/../../config/cnx.php';
 
 
-//Check de la méthode
+// Vérifie que la méthode HTTP est bien POST
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
     JsonResponse::error('Méthode non autorisé', 405, 'Vous devez utiliser la méthode POST');
 }
 
-//Lecture et décodage du JSON
+// Lecture et décodage du corps JSON
 $data = json_decode(file_get_contents('php://input'), true);
 
-//Vérification de la qualité des données
+// Vérification de la validité des données reçues
 if(!isset($data['avis'], $data['voyageID'], $data['clientID']) || empty($data['avis']) ||
 !is_numeric($data['voyageID']) || !is_numeric($data['clientID'])){
-    JsonResponse::error('Les champs avis (string), voyageID et clientID (int) sont obligatoire', 400);
+    JsonResponse::error('Les champs "avis" (string), "voyageID" et "clientID" (entiers) sont obligatoires.', 400);
 }
 
-//Si données OK : Création de l'objet Avis
+// Création de l’objet Avis si les données sont valides
 $avis = (new Avis())
     ->setAvis(trim($data['avis']))
     ->setVoyageID((int)$data['voyageID'])
     ->setClientID((int)$data['clientID']);
 
-//Instanciation du manager pour la création de l'avis
+// Instanciation du manager et insertion de l’avis
 $manager = new AvisManager($cnx);
 $manager->AddAvis($avis);
 

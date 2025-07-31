@@ -8,14 +8,18 @@ class VoyageManager{
 
     private $cnx;
 
-    /** Rendre la variable de connexion obligatoire */ 
+/** Initialise la connexion PDO (obligatoire) */
+
     public function __construct($cnx)
     {
-        $this->SetCnx($cnx);
+        $this->setCnx($cnx);
     }
-    /** Rendre la variable de connexion obligatoire */ 
 
-    /** Ajouter un voyage */ 
+/** Initialise la connexion PDO (obligatoire) */
+
+
+/** Insère un nouveau voyage en base de données */
+
 #[OA\Post(
     path: '/voyage/create',
     tags: ['Voyage'],
@@ -44,7 +48,7 @@ class VoyageManager{
         ]
     ),
     responses: [
-        new OA\Response(response: 201, description: 'Inserer les datas'),
+        new OA\Response(response: 201, description: 'Voyage ajouté avec succès'),
         new OA\Response(response: 400, description: 'Tous les champs sont obligatoires'),
         new OA\Response(response: 405, description: 'Méthode non autorisée')
     ]
@@ -56,9 +60,11 @@ class VoyageManager{
         $req->bindValue(':description', $voyage->getDescription(), PDO::PARAM_STR);
         $req->execute();
     }   
-    /** Ajouter un voyage */ 
 
-    /** Afficher un voyage*/
+/** Insère un nouveau voyage en base de données */
+
+
+/** Récupère un voyage par son ID */
 
 #[OA\Get(
     path: '/voyage/read/{voyageID}',
@@ -93,21 +99,23 @@ class VoyageManager{
         $data = $req->fetch(PDO::FETCH_ASSOC);
 
         if(!empty($data)){
-            $client = new Voyage();
+            $voyage = new Voyage();
             foreach($data as $key => $value){
                 $method = 'set'.ucfirst($key);
-                if(method_exists($client, $method)){
-                    $client->$method($value);
+                if(method_exists($voyage, $method)){
+                    $voyage->$method($value);
                 }
             }
-            return $client;
+            return $voyage;
         } else {
             return null;
         }
     }
-    /** Afficher un voyage */ 
 
-    /** Afficher tous les voyage*/ 
+/** Récupère un voyage par son ID */
+
+
+/** Récupère la liste de tous les voyages */
 
 #[OA\Get(
     path:'/voyage/readAll',
@@ -146,9 +154,12 @@ class VoyageManager{
 
         return $voyages;
     }   
-    /** Afficher tous les voyage*/ 
+    
+/** Récupère la liste de tous les voyages */
 
-    /** Compter le nombre de data dans la table*/
+
+/** Retourne le nombre total de voyages enregistrés */
+
     public function CountTravel(){
         $sql = 'SELECT COUNT(*) as compte FROM certification_voyage';
         $req = $this->cnx->prepare($sql);
@@ -157,9 +168,11 @@ class VoyageManager{
         $data = $req->fetch(PDO::FETCH_ASSOC);
         return $data['compte'];
     }
-    /** Compter le nombre de data dans la table*/
 
-    /** Modifier un voyage*/
+/** Retourne le nombre total de voyages enregistrés */
+
+
+/** Met à jour les informations d’un voyage */
 
 #[OA\Put(
     path: '/voyage/update',
@@ -208,9 +221,10 @@ class VoyageManager{
         $req->execute();
 
     }
-    /** Modifier un voyage*/   
 
-    /** Supprimer un voyage*/
+/** Met à jour les informations d’un voyage */
+
+/** Supprime un voyage à partir de son ID */
 
 #[OA\Delete(
     path: '/voyage/delete',
@@ -247,11 +261,15 @@ class VoyageManager{
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->execute();
     } 
-    /** Supprimer un voyage*/   
 
-    /** Connexion PDO */  
-    public function SetCnx($cnx){
+/** Supprime un voyage à partir de son ID */
+
+/** Injecte la connexion PDO */
+
+    public function setCnx($cnx){
         $this->cnx = $cnx;
     }
-    /** Connexion PDO */  
+
+/** Injecte la connexion PDO */
+
 }
