@@ -78,16 +78,16 @@ AGENCE_VOYAGE/
 │
 ├── 📁 classes/                # Classes PHP : modèles représentant les entités (Client, Voyage, etc.)
 │
-├── 📁 config/                 # Fichiers de configuration (ex: _config.php)
+├── 📁 config/                 # Fichiers de configuration
 │
-├── 📁 swagger-ui-master/     # Interface Swagger UI pour tester l'API (docs interactives)
+├── 📁 swagger-ui-master/     # Interface Swagger UI pour tester l'API 
 │
-├── 📁 utilities/             # Fonctions utilitaires (helpers, JSON response, etc.)
+├── 📁 utilities/             # Fonctions utilitaires 
 │
 ├── 📁 vendor/                # Dépendances installées via Composer (Swagger, etc.)
 │
 ├── .gitignore                # Fichier pour ignorer des fichiers/dossiers dans Git
-├── .htaccess                 # Règles Apache (url rewriting, sécurité, etc.)
+├── .htaccess                 # Règles Apache (url rewriting)
 ├── composer.json             # Déclaration des dépendances PHP
 ├── composer.lock             # Versions précises des dépendances
 ├── index.php                 # Point d'entrée principal de l’API
