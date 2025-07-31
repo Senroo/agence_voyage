@@ -65,21 +65,34 @@ La base de données est composée de **4 tables relationnelles** :
 
 📌 **Schéma conceptuel :**
 
-![Schéma conceptuel](./docs/schema-bdd.png)
+![Schéma conceptuel](bdd.jpg)
 
 ---
 
 ## 📂 Organisation du dépôt
 
 ```bash
-├── api/                  # Dossiers d’API (client, voyage, avis)
-├── classes/              # Modèles PHP orientés objets
-├── config/               # Connexion PDO & constantes
-├── database/             # Script SQL d'initialisation
-├── vendor/               # Dépendances Swagger (autoload)
-├── swagger/              # Configuration Swagger
-├── public_html/          # Point d’entrée (index, .htaccess)
-└── README.md             # Présentation du projet
+AGENCE_VOYAGE/
+│
+├── 📁 api/                    # Dossier contenant les routes de l'API REST (CRUD)
+│
+├── 📁 classes/                # Classes PHP : modèles représentant les entités (Client, Voyage, etc.)
+│
+├── 📁 config/                 # Fichiers de configuration (ex: _config.php)
+│
+├── 📁 swagger-ui-master/     # Interface Swagger UI pour tester l'API (docs interactives)
+│
+├── 📁 utilities/             # Fonctions utilitaires (helpers, JSON response, etc.)
+│
+├── 📁 vendor/                # Dépendances installées via Composer (Swagger, etc.)
+│
+├── .gitignore                # Fichier pour ignorer des fichiers/dossiers dans Git
+├── .htaccess                 # Règles Apache (url rewriting, sécurité, etc.)
+├── composer.json             # Déclaration des dépendances PHP
+├── composer.lock             # Versions précises des dépendances
+├── index.php                 # Point d'entrée principal de l’API
+├── swagger-bootstrap.php     # Bootstrap Swagger
+
 ```
 
 ---
@@ -88,7 +101,7 @@ La base de données est composée de **4 tables relationnelles** :
 
 L'interface Swagger est disponible à cette adresse :
 
-🔗 [https://romain-senger.fr/api/swagger](https://romain-senger.fr/api/swagger)
+🔗 [https://romain-senger.fr](https://romain-senger.fr)
 
 ---
 
